@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => {
     const isVercel = !!process.env.VERCEL;
     const isDev = !isVercel;
 
+    // Sertifika oluşturma işlemi yalnızca geliştirme ortamında yapılır
     if (isDev) {
         if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
             try {
@@ -61,7 +62,7 @@ export default defineConfig(({ mode }) => {
                     key: fs.readFileSync(keyFilePath),
                     cert: fs.readFileSync(certFilePath),
                 }
-                : false,
+                : false, // Vercel ortamında HTTPS devre dışı bırakılır
         },
     };
 });
