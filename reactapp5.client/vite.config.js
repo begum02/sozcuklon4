@@ -4,6 +4,7 @@ import { defineConfig, loadEnv } from 'vite';
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
+import child_process from 'child_process';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(({ mode }) => {
@@ -18,17 +19,14 @@ export default defineConfig(({ mode }) => {
     const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
     const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-    const isVercel = !!process.env.VERCEL; // Vercel ortamını kontrol et
-    const isDev = !isVercel; // Geliştirme ortamı kontrolü
+    const isVercel = !!process.env.VERCEL;
+    const isDev = !isVercel;
 
     // Sertifika oluşturma işlemi yalnızca yerel geliştirme ortamında yapılır
     if (isDev) {
         if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
             try {
-                // Sertifika oluşturma işlemi
-                require('child_process').execSync(
-                    `dotnet dev-certs https --export-path "${certFilePath}" --format Pem --no-password`
-                );
+                child_process.execSync(`dotnet dev-certs https --export-path "${certFilePath}" --format Pem --no-password`);
             } catch (error) {
                 console.warn("Sertifika oluşturulamadı, ancak development dışında bu sorun değildir.");
             }
@@ -42,6 +40,9 @@ export default defineConfig(({ mode }) => {
             : 'https://localhost:7268';
 
     return {
+        optimizeDeps: {
+            include: ['@emotion/react', '@mui/styled-engine'], // Optimize edilen bağımlılıklar
+        },
         plugins: [
             svgr(),
             plugin(),
