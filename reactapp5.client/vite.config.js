@@ -9,42 +9,29 @@ import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
+    const isWindows = process.platform === 'win32';
+    const certificateName = "reactapp5.client";
 
-    // Platform kontrolü
-    const isWindows = process.platform === 'win32'; // ? DÜZELTÝLDÝ
-
-    // Sertifika dizini
     const baseFolder = isWindows
         ? path.join(env.APPDATA || '', 'ASP.NET', 'https')
         : path.join(env.HOME || '', '.aspnet', 'https');
 
-    const certificateName = "reactapp5.client";
     const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
     const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-    // Sertifika dizini oluþturulmamýþsa oluþtur
-    if (!fs.existsSync(baseFolder)) {
-        fs.mkdirSync(baseFolder, { recursive: true });
-    }
+    const isVercel = !!process.env.VERCEL;
+    const isDev = !isVercel;
 
-    // Sertifika ve anahtar dosyalarýný kontrol et, yoksa oluþtur
-    if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-        const result = child_process.spawnSync('dotnet', [
-            'dev-certs',
-            'https',
-            '--export-path',
-            certFilePath,
-            '--format',
-            'Pem',
-            '--no-password',
-        ], { stdio: 'inherit' });
-
-        if (result.status !== 0) {
-            throw new Error("Sertifika oluþturulamadý.");
+    if (isDev) {
+        if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+            try {
+                child_process.execSync(`dotnet dev-certs https --export-path "${certFilePath}" --format Pem --no-password`);
+            } catch (error) {
+                console.warn("Sertifika oluÅŸturulamadÄ±, ancak development dÄ±ÅŸÄ±nda bu sorun deÄŸildir.");
+            }
         }
     }
 
-    // Proxy hedef URL'sini ayarla
     const target = env.ASPNETCORE_HTTPS_PORT
         ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
         : env.ASPNETCORE_URLS
@@ -69,11 +56,13 @@ export default defineConfig(({ mode }) => {
                 },
             },
             port: parseInt(env.DEV_SERVER_PORT || '65102'),
-            https: {
-                key: fs.readFileSync(keyFilePath),
-                cert: fs.readFileSync(certFilePath),
-            },
+            https: isDev && fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)
+                ? {
+                    key: fs.readFileSync(keyFilePath),
+                    cert: fs.readFileSync(certFilePath),
+                }
+                : false,
         },
-    }
-
+    };
 });
+
