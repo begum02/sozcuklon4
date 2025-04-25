@@ -1,0 +1,24 @@
+{
+  "Version": 1,
+  "Hash": "SNpL/HCNV2jwWxIwMg2lm5nFJ/Kiy9UF/3EOlnufEaY=",
+  "Source": "ReactApp5.Server",
+  "BasePath": "_content/ReactApp5.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\BBN\\source\\repos\\ReactApp5\\reactapp5.client\\reactapp5.client.esproj",
+      "Version": 2,
+      "Source": "reactapp5.client",
+      "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

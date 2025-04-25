@@ -1,0 +1,26 @@
+.Navbar {
+    width: 100vw;
+    background-color: #e53935; /* kýrmýzý arka plan */
+    margin-left:0px;
+    height:55px;
+   
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+
+    color: white;
+}
+.search{
+    margin-right:10px;
+}
+
+.logo{
+    margin-left:170px;
+
+}
+
+.header-bar {
+    margin-right: 170px;
+    display: flex; /* Ýkonlarý yatay hizalamak için flexbox */
+    gap: 20px; /* Ýkonlar arasýndaki boþluk */
+}
