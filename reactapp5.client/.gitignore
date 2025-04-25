@@ -13,9 +13,12 @@ dist-ssr
 *.local
 # Environment files
 .env
+# Paket kilit dosyası
+package-lock.json
 
 # Editor directories and files
 .vscode/*
+.vs/
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -24,3 +27,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
